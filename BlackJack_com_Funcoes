@@ -27,7 +27,17 @@ while True:
   print(menu)
   opcao = input('Digite uma opção [S/P/J/M]: ').strip().lower()
 
-  if opcao == 'j':
+  if opcao == 's':
+    print(f'Seu saldo é: {saldo}\n')
+
+  elif opcao == 'p':
+    print('Jogo Encerrado!\n')
+    break
+
+  elif opcao == 'm':
+    print(menu)
+
+  elif opcao == 'j':
 
     if saldo == 0 or saldo < 30:
         print('Saldo Zerado. Ou Insuficiente\n')
@@ -101,11 +111,8 @@ while True:
           estouro = True
           break
 
-        if estouro:
-          continue
-
       # TODO: AQUI COMEÇA A VEZ D CROUPIER
-      if parar == True or blackjack == True:
+      if not estouro:
         carta_um_croupier = baralho[cartas_croupier[0]]
         soma_croupier = calcular_pontuacao(baralho,cartas_croupier)
 
@@ -113,31 +120,21 @@ while True:
         print(f"{cartas_croupier}\n")
         print(f'Pontuação Croupier: {soma_croupier}\n')
 
-      while soma_croupier < 17:
-        playerturn(baralho,cartas_croupier)
-        soma_croupier = calcular_pontuacao(baralho,cartas_croupier)
+        while soma_croupier < 17:
+          playerturn(baralho,cartas_croupier)
+          soma_croupier = calcular_pontuacao(baralho,cartas_croupier)
 
-        print('Baralho Croupier\n')
-        print(cartas_croupier)
+          print('Baralho Croupier\n')
+          print(cartas_croupier)
 
-      print('Croupier atingiu o limite!\n')
-      print(f"A pontução do croupier foi: {soma_croupier}\n")
+        print('Croupier atingiu o limite!\n')
+        print(f"A pontução do croupier foi: {soma_croupier}\n")
 
-      # TODO: RESULTADO SAI AQUI
-      result(soma_jogador, soma_croupier, saldo, aposta)
+        # TODO: RESULTADO SAI AQUI
+        saldo = result(soma_jogador, soma_croupier, saldo, aposta)
 
     else:
       print('Saldo Insuficiente!\n\n')
-
-  elif opcao == 's':
-    print(f'Seu saldo é: {saldo}\n')
-
-  elif opcao == 'p':
-    print('Jogo Encerrado!\n')
-    break
-
-  elif opcao == 'm':
-    print(menu)
 
   else:
     print('Opção Inválida!\n')
