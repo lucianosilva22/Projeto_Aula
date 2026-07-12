@@ -1,0 +1,143 @@
+from funcoes_blackjack import calcular_pontuacao, playerturn, result
+import random
+baralho = {'A' : 11,
+           'K' : 10,
+           'Q' : 10,
+           'J' : 10,
+           '2' : 2,
+           '3' : 3,
+           '4' : 4,
+           '5' : 5,
+           '6' : 6,
+           '7' : 7,
+           '8' : 8,
+           '9' : 9,
+           '10' : 10}
+menu = '''
+VER SALDO.[S]
+PARAR.....[P]
+JOGAR.....[J]
+'''
+saldo = 300
+
+while True:
+  estouro = False
+  parar = False
+  blackjack = False
+  print(menu)
+  opcao = input('Digite uma opção [S/P/J/M]: ').strip().lower()
+
+  if opcao == 'j':
+
+    if saldo == 0 or saldo < 30:
+        print('Saldo Zerado. Ou Insuficiente\n')
+        break
+    try:
+      aposta = float(input('Quanto deseja apostar: '))
+    except ValueError:
+      print('Dígito Inválido!\n')
+      continue
+
+    if aposta < 30:
+      print('Somente apostas maiores que 30R$.\n')
+      continue
+
+    if aposta > saldo:
+      print('Saldo Insuficiente.')
+      continue
+
+    # TODO: AQUI COMEÇA O JOGO
+    if aposta <= saldo and aposta >= 30:
+      saldo -= aposta
+      cartas = list(baralho)
+
+      cartas_jogador = random.choices(cartas, k=2)
+      cartas_croupier = [random.choice(cartas)]
+
+      # TODO: MOSTRA A CARTA DO CROUPIER
+      print(f"\n{cartas_croupier[0]} - Carta Virada\n\n\n\n")
+
+      # TODO: SOMA AS CARTAS DO JOGADOR E AS CARTAS DO CROUPIER(QUE NO MOMENTO É UMA SÓ)
+      soma_jogador = calcular_pontuacao(baralho,cartas_jogador)
+      soma_croupier = calcular_pontuacao(baralho,cartas_croupier)
+
+      # TODO: MOSTRA O SEU BARALHO
+      print('Seu Baralho\n')
+      print(f"{cartas_jogador}\n")
+      print(f'Sua pontução é: {soma_jogador}\n')
+
+      # TODO: VERIFICA ANTES DE TUDO SE O JOGADOR JA ATINGIU O BLACKJACK
+      if soma_jogador == 21:
+        blackjack = True
+        print('BlackJack!\n')
+
+      while soma_jogador < 21:
+        opcao = input('Parar[P] | Pedir(Hit)[H]: ').lower().strip()
+        if opcao == 'p':
+          print(f'Parou! Sua pontuação foi: {soma_jogador}\n')
+          parar = True
+          break
+
+        elif opcao == 'h':
+          playerturn(baralho,cartas_jogador)
+
+          print('Seu Baralho\n')
+          print(cartas_jogador)
+
+          soma_jogador = calcular_pontuacao(baralho,cartas_jogador)
+
+          print(f'Sua pontução é {soma_jogador}.\n')
+
+        else:
+          print('Opção Inválida!\n')
+
+        if soma_jogador == 21:
+          print('BlackJack!\n')
+          blackjack = True
+
+        if soma_jogador > 21:
+          print('Estourou!\n')
+          print('Casa Vence!\n')
+          estouro = True
+          break
+
+        if estouro:
+          continue
+
+      # TODO: AQUI COMEÇA A VEZ D CROUPIER
+      if parar == True or blackjack == True:
+        carta_um_croupier = baralho[cartas_croupier[0]]
+        soma_croupier = calcular_pontuacao(baralho,cartas_croupier)
+
+        print('Vez do Croupier!\n')
+        print(f"{cartas_croupier}\n")
+        print(f'Pontuação Croupier: {soma_croupier}\n')
+
+      while soma_croupier < 17:
+        playerturn(baralho,cartas_croupier)
+        soma_croupier = calcular_pontuacao(baralho,cartas_croupier)
+
+        print('Baralho Croupier\n')
+        print(cartas_croupier)
+
+      print('Croupier atingiu o limite!\n')
+      print(f"A pontução do croupier foi: {soma_croupier}\n")
+
+      # TODO: RESULTADO SAI AQUI
+      result(soma_jogador, soma_croupier, saldo, aposta)
+
+    else:
+      print('Saldo Insuficiente!\n\n')
+
+  elif opcao == 's':
+    print(f'Seu saldo é: {saldo}\n')
+
+  elif opcao == 'p':
+    print('Jogo Encerrado!\n')
+    break
+
+  elif opcao == 'm':
+    print(menu)
+
+  else:
+    print('Opção Inválida!\n')
