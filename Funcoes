@@ -1,0 +1,38 @@
+def calcular_pontuacao(baralho, mao):
+  soma = 0
+  for carta in mao:
+    soma += baralho[carta]
+
+  ases = mao.count('A') # CONTA QUANTOS ASES TEM NA MÃO
+
+  while soma > 21 and ases > 0: # ENQUANTO ESTIVER ESTOURANDO VAI TIRANDO 10 PARA O AS VALER 1
+    soma -= 10
+    ases -= 1
+
+  return soma
+
+def playerturn(baralho, cartas_jogador):
+  import random
+  cartas = list(baralho)
+  nova_carta = random.choice(cartas)  # Vai sortear uma carta
+  cartas_jogador.append(nova_carta)  # Vai adiconar essa carta no baralho para aparecer para o jogador
+
+def result(soma_jogador, soma_croupier, saldo, aposta):
+  if soma_croupier == 21:
+    print('BlackJack')
+
+  if soma_jogador > soma_croupier or soma_croupier > 21:
+    print('Jogador Vence!\n\n')
+    saldo += aposta * 2
+
+  elif soma_croupier == soma_jogador:
+    print('Empate!\n\n')
+    saldo += aposta
+
+  else:
+    print('Casa Vence!\n\n')
+
+
+
+
+
