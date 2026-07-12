@@ -21,13 +21,15 @@ def result(soma_jogador, soma_croupier, saldo, aposta):
   if soma_croupier == 21:
     print('BlackJack')
 
-  if soma_jogador > soma_croupier or soma_croupier > 21:
+  elif soma_jogador > soma_croupier and soma_jogador <= 21 or soma_croupier > 21:
     print('Jogador Vence!\n\n')
-    saldo += aposta * 2
+    novo_saldo = saldo + aposta * 2
+    return novo_saldo
 
   elif soma_croupier == soma_jogador:
     print('Empate!\n\n')
-    saldo += aposta
+    novo_saldo = saldo + aposta
+    return novo_saldo
 
   else:
     print('Casa Vence!\n\n')
